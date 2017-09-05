@@ -24,11 +24,13 @@ var (
 
 )
 
+// 自动从众筹的开始块 - 结束块 中读取打币地址，然后查询tokenBalance，按比例退回
 func ICORefund() {
 	holders := GetHolders()
 	SendEther(holders)
 }
 
+// 指定账户 手工分批发送
 func ICORefund1() {
 	holders := make(map[string]*big.Int)
 
@@ -43,6 +45,7 @@ func ICORefund1() {
 	SendEther(holders)
 }
 
+// 获取 参加众筹的地址和token数量
 func GetHolders() map[string]*big.Int {
 	holders := make(map[string]*big.Int)
 	for index := start; index <= end; index++ {
@@ -65,6 +68,7 @@ func GetHolders() map[string]*big.Int {
 	return holders
 }
 
+// 打印token持有者信息
 func ShowHolder(holders map[string]*big.Int) {
 	totalToken := new(big.Int)
 	index := 0
@@ -88,6 +92,7 @@ func ShowHolder(holders map[string]*big.Int) {
 	fmt.Println(str2)
 }
 
+// 批量发送ETH，并统计数量
 func SendEther(holders map[string]*big.Int) {
 	totalToken := new(big.Int)
 
@@ -130,6 +135,7 @@ func SendEther(holders map[string]*big.Int) {
 	fmt.Printf("failedHolder: %d \n%s", len(failedHolders), failedHolders)
 }
 
+// 发送TX
 func send(nonce int64, to string, value *big.Int) (string, error) {
 
 	txObj := tx.NewTxObj(tool.IntToHex(nonce), to, fmt.Sprintf("0x%x", value), "")
@@ -155,6 +161,7 @@ func send(nonce int64, to string, value *big.Int) (string, error) {
 	return reply, err
 }
 
+// 获取指定块中参加众筹的地址
 func GetSenderAtBlock(blockNum int64, toAddr string) map[string]int64 {
 
 	senders := make(map[string]int64)
